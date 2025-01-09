@@ -25881,3 +25881,8 @@ img {
     -webkit-font-smoothing: auto;
     -moz-osx-font-smoothing: auto;
 }
+
+.backdrop-blur {
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+}

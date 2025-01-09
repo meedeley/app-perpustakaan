@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
     <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
     <title>Sign up - Tabler - Premium and Open Source dashboard template with responsive and high quality UI.</title>
-    
+
     {{-- Style --}}
-    <link href="{{ asset('dist/css/tabler.min.css?1692870487') }}" rel="stylesheet"/>
+    <link href="{{ asset('dist/css/tabler.min.css') }}" rel="stylesheet"/>
   </head>
 
   <body  class="d-flex flex-column">
@@ -23,8 +23,8 @@
         <div>
             {{ $slot }}
         </div>
-    
-    <script src="{{ asset('dist/js/demo-theme.min.js?1692870487') }}"></script>
-    <script src="{{ asset('dist/js/tabler.min.js?1692870487') }}" defer></script>
+
+    <script src="{{ asset('dist/js/demo-theme.min.js') }}"></script>
+    <script src="{{ asset('dist/js/tabler.js') }}" defer></script>
   </body>
 </html>

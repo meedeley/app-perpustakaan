@@ -21,6 +21,7 @@
             </div>
         </div>
     </div>
+
     @push('scripts')
     <script type="text/javascript">
     $(document).ready(function () {
@@ -32,7 +33,7 @@
                 { data: 'id', name: 'id' },
                 { data: 'name', name: 'name' },
                 { data: 'email', name: 'email' },
-    
+
             ]
         });
      });

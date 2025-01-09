@@ -1,7 +1,5 @@
 @props(['key'])
 
-@error($key)
 <div class="is-invalid">
-    <small class="ms-2 text-danger">{{ $message }}</small>
+    <small id="error" class="ms-2 text-danger"></small>
 </div>
-@enderror
