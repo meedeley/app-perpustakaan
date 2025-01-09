@@ -64,10 +64,10 @@ let table = $("#tabel-kategori").DataTable({
             $("#modal-form").modal("show");
         });
 
-        $(".action-hapus", row).click(function (e) {
+        $(".action-hapus", row).on("click", function (e) {
             e.preventDefault();
             Swal.fire({
-                icon : "error",
+                icon: "error",
                 title: "Peringatan !",
                 text: `Anda yakin akan menghapus data ini ??`,
                 type: "warning",
@@ -76,24 +76,22 @@ let table = $("#tabel-kategori").DataTable({
                 cancelButtonColor: "#5d5d5d",
                 cancelButtonText: "Tidak",
                 confirmButtonText: "Hapus",
-            }).then(
-                function () {
+            }).then((result) => {
+                if (result.isConfirmed) {
                     $.httpRequest({
                         url: baseUrl(`/kategori/${data.id}`),
                         method: "DELETE",
                         response: (res) => {
                             if (res.statusCode == 200) {
-                                swal("success", "Berhasil!" ,res.message);
+                                swal("success", "Berhasil!", res.message);
                                 table.ajax.reload();
                             }
                         },
                     });
-                },
-                function (dismiss) {
-                    if (dismiss === "cancel") {
-                    }
+                } else {
+                    swal("info", "Batal", "Aksi Hapus Di Batalkan");
                 }
-            );
+            });
         });
     },
 });
@@ -109,8 +107,10 @@ $("#form-submit").on("submit", (e) => {
 
     let id = $("input[name='id']").lenght;
     let url =
-        id > 0  || id == undefined ? baseUrl("/kategori/create") : baseUrl("/kategori/update");
-    let method = url > 0 || id == undefined ? "POST" : "PUT";
+        id > 0 && id == undefined
+            ? baseUrl("/kategori/create")
+            : baseUrl("/kategori/update");
+    let method = url > 0 && id == undefined ? "POST" : "PUT";
 
     $.httpRequest({
         url: url,
