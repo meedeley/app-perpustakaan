@@ -11,6 +11,7 @@
     <link rel="shortcut icon" href="{{ asset('static/logo-white.svg') }}" type="image/x-icon">
     <link href="{{ asset('dist/css/tabler.min.css') }}" rel="stylesheet" />
 
+
     {{-- Datatable --}}
     <link href="{{ asset('dist/lib/datatable/bootstrap-datatable.css') }}" rel="stylesheet">
     <script src="{{ asset('dist/lib/datatable/jquery.js') }}"></script>
@@ -19,6 +20,10 @@
 
     <script src="{{ asset('utils/script.js') }}"></script>
     <script src="{{ asset('vendor/sweetalert/sweetalert.all.js') }}"></script>
+
+     {{-- Year Picker --}}
+     <link rel="stylesheet" href="{{ asset('dist/css/yearpicker.css')}}">
+     <script src="{{ asset('dist/lib/yearpicker.js')}}"></script>
 
     @vite(['resources/css/app.css']);
 </head>

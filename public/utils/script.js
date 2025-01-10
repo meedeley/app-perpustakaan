@@ -53,5 +53,3 @@ const swal = (icon, title, text) => {
         timer: 1500
     });
 }
-
-

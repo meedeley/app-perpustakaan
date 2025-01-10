@@ -1,6 +1,6 @@
-let table = $("#tabel-kategori").DataTable({
+let table = $("#tabel-buku").DataTable({
     ajax: {
-        url: baseUrl("/fetch/kategori"),
+        url: baseUrl("/fetch/buku"),
         headers: {
             "X-XSRF-TOKEN": getCookie("XSRF-TOKEN"),
         },
@@ -22,15 +22,25 @@ let table = $("#tabel-kategori").DataTable({
             render: function (data, i, row, meta) {
                 return meta.row + 1;
             },
-            width: "20px",
         },
         {
-            data: "nama",
-            width: "50px",
+            data: "kode_buku",
+        },
+        {
+            data: "judul_buku",
+        },
+        {
+            data: "pengarang",
+        },
+        {
+            data: "tahun",
+        },
+        {
+            data: "kategori",
         },
         {
             data: "id",
-            render: function (data, i, row) {
+            render: function () {
                 // => Create Container Button
                 let div = document.createElement("div");
                 div.className = "d-flex gap-2 row-action";
@@ -51,15 +61,35 @@ let table = $("#tabel-kategori").DataTable({
 
                 return div.outerHTML;
             },
-            width: "45px",
         },
     ],
-    createdRow: function (row, data) {
+    createdRow: (row, data) => {
         $(".action-edit", row).on("click", function (e) {
             e.preventDefault();
 
             $("input[name='id']").val(data.id);
-            $("input[name='nama']").val(data.nama);
+            $("input[name='kode_buku']").val(data.kode_buku),
+                $("input[name='judul_buku']").val(data.judul_buku),
+                $("input[name='pengarang']").val(data.pengarang),
+                $("input[name='tahun']").val(data.tahun),
+                $("#kategori").val(data.kategori_id),
+
+                $.httpRequest({
+                    url: baseUrl("/select/kategori"),
+                    method: "GET",
+                    contentType: "application/json",
+                    response: (res) => {
+                        if (res.statusCode == 200) {
+                            let select = $("#kategori");
+
+                            res.data.forEach((data) => {
+                                select.append(
+                                    `<option value="${data.id}">${data.nama}</option>`
+                                );
+                            });
+                        }
+                    },
+                });
 
             $("#modal-form").modal("show");
         });
@@ -79,7 +109,7 @@ let table = $("#tabel-kategori").DataTable({
             }).then((result) => {
                 if (result.isConfirmed) {
                     $.httpRequest({
-                        url: baseUrl(`/kategori/${data.id}`),
+                        url: baseUrl(`/buku/${data.id}`),
                         method: "DELETE",
                         response: (res) => {
                             if (res.statusCode == 200) {
@@ -96,10 +126,48 @@ let table = $("#tabel-kategori").DataTable({
     },
 });
 
-// => Tambah Kategori
-$("#set-kategori").on("click", function () {
+$("#set-buku").on("click", () => {
+    $("input[name='kode_buku']").val(""),
+        $("input[name='judul_buku']").val(""),
+        $("input[name='pengarang']").val(""),
+        $("tahun[name='tahun']").val(""),
+        // => GET KODE BUKU
+        $.httpRequest({
+            url: baseUrl("/kode-buku"),
+            method: "GET",
+            contentType: "application/json",
+            response: (res) => {
+                if (res.statusCode == 200) {
+                    $("input[name='kode_buku']").val(res.code);
+                }
+            },
+        });
+
+    // => GET DATA KATEGORI
+    $.httpRequest({
+        url: baseUrl("/select/kategori"),
+        method: "GET",
+        contentType: "application/json",
+        response: (res) => {
+            if (res.statusCode == 200) {
+                let select = $("#kategori");
+
+                select.empty();
+                select.append("<option selected>-- Pilih Kategori --</option>");
+
+                res.data.forEach((data) => {
+                    select.append(
+                        `<option value="${data.id}">${data.nama}</option>`
+                    );
+                });
+            }
+        },
+    });
+
+    // => Year Picker
+    $("input[name='tahun']").yearpicker();
+
     $("#modal-form").modal("show");
-    $("input[name='nama']").val("");
 });
 
 $("#form-submit").on("submit", (e) => {
@@ -108,8 +176,8 @@ $("#form-submit").on("submit", (e) => {
     let id = $("input[name='id']").val();
     let url =
         id == undefined || id == ""
-            ? baseUrl("/kategori/create")
-            : baseUrl("/kategori/update");
+            ? baseUrl("/buku/create")
+            : baseUrl("/buku/update");
     let method = id == undefined || id == "" ? "POST" : "PUT";
 
     $.httpRequest({
@@ -117,8 +185,12 @@ $("#form-submit").on("submit", (e) => {
         method: method,
         contentType: "application/json",
         data: JSON.stringify({
-            id: $("input[name='id']").val(),
-            nama: $("input[name='nama']").val(),
+            id: id,
+            kode_buku: $("input[name='kode_buku']").val(),
+            judul_buku: $("input[name='judul_buku']").val(),
+            pengarang: $("input[name='pengarang']").val(),
+            tahun: $("input[name='tahun']").val(),
+            kategori: $("select[name='kategori']").val(),
         }),
         response: (res) => {
             if (res.statusCode == 200) {
@@ -128,13 +200,13 @@ $("#form-submit").on("submit", (e) => {
                     swal(
                         "success",
                         "Berhasil!",
-                        "Berhasil Membuat Data Kategori!"
+                        "Berhasil Membuat Data Buku!"
                     );
                 } else {
                     swal(
                         "success",
                         "Berhasil!",
-                        "Berhasil Mengupdate Data Kategori!"
+                        "Berhasil Mengupdate Data Buku!"
                     );
                 }
             } else {
@@ -155,3 +227,6 @@ $("#form-submit").on("submit", (e) => {
 $("#simpan").on("click", (e) => {
     $("#form-submit").trigger("submit");
 });
+
+
+
