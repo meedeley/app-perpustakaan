@@ -13,21 +13,20 @@ class LoginController extends Controller
         return view('auth.login');
     }
 
-    public function login(LoginRequest $request) : RedirectResponse
+    public function login(LoginRequest $request): RedirectResponse
     {
-       $credentials = $request->validated();
+        $credentials = $request->validated();
 
-        if(auth()->attempt($credentials))
-        {
+        if (auth()->attempt($credentials)) {
             session()->regenerate();
 
-            return redirect()->route("dashboard");
+            return redirect()->route('dashboard');
         }
 
         return redirect()->back();
     }
 
-    public function logout() : RedirectResponse
+    public function logout(): RedirectResponse
     {
         session()->flush();
 

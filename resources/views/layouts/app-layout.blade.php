@@ -6,11 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
 
-    <title>Laravel Tabler UI</title>
+    <title>Perpus Digital</title>
 
     <link rel="shortcut icon" href="{{ asset('static/logo-white.svg') }}" type="image/x-icon">
     <link href="{{ asset('dist/css/tabler.min.css') }}" rel="stylesheet" />
-
 
     {{-- Datatable --}}
     <link href="{{ asset('dist/lib/datatable/bootstrap-datatable.css') }}" rel="stylesheet">
@@ -25,7 +24,6 @@
      <link rel="stylesheet" href="{{ asset('dist/css/yearpicker.css')}}">
      <script src="{{ asset('dist/lib/yearpicker.js')}}"></script>
 
-    @vite(['resources/css/app.css']);
 </head>
 
 <body>

@@ -26,27 +26,13 @@ class AdminBukuController extends Controller
         return DataTables::of($data)->toJson();
     }
 
-    public function generateKodeBuku()
-    {
-        $length = 10;
-        $characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-        $code = '';
-        for ($i = 0; $i < $length; $i++) {
-            $code .= $characters[rand(0, strlen($characters) - 1)];
-        }
-        return response()->json([
-            "statusCode" => 200,
-            "code" => $code
-        ]);
-    }
-
     public function getKategori()
     {
         $data = Kategori::query()->get();
 
         return response()->json([
-            "statusCode" => 200,
-            "data" => $data
+            'statusCode' => 200,
+            'data' => $data,
         ]);
     }
 
@@ -57,29 +43,29 @@ class AdminBukuController extends Controller
             'judul_buku' => 'required|string',
             'pengarang' => 'required|string',
             'tahun' => 'required|numeric',
-            'kategori' => 'required'
+            'kategori' => 'required',
         ]);
 
         if ($validated->fails()) {
             return response()->json([
-                "statusCode" => 409,
-                "message" => "Mohon isi form dengan benar",
-                "errors" => $validated->errors(),
+                'statusCode' => 409,
+                'message' => 'Mohon isi form dengan benar',
+                'errors' => $validated->errors(),
             ]);
         }
 
         $data = Buku::query()->create([
-            "kode_buku" => $request->kode_buku,
-            "judul_buku" => $request->judul_buku,
-            "pengarang" => $request->pengarang,
-            "tahun" => $request->tahun,
-            "kategori_id" => $request->kategori
+            'kode_buku' => $request->kode_buku,
+            'judul_buku' => $request->judul_buku,
+            'pengarang' => $request->pengarang,
+            'tahun' => $request->tahun,
+            'kategori_id' => $request->kategori,
         ]);
 
         return response()->json([
-            "statusCode" => 200,
-            "message" => "Sukses membuat data buku",
-            "data" => $data
+            'statusCode' => 200,
+            'message' => 'Sukses membuat data buku',
+            'data' => $data,
         ]);
     }
 
@@ -90,44 +76,44 @@ class AdminBukuController extends Controller
             'judul_buku' => 'required|string',
             'pengarang' => 'required|string',
             'tahun' => 'required|numeric',
-            'kategori' => 'required'
+            'kategori' => 'required',
         ]);
 
         if ($validated->fails()) {
             return response()->json([
-                "statusCode" => 409,
-                "message" => "Mohon isi form dengan benar",
-                "errors" => $validated->errors(),
+                'statusCode' => 409,
+                'message' => 'Mohon isi form dengan benar',
+                'errors' => $validated->errors(),
             ]);
         }
 
         $data = Buku::query()->find($request->id)->update([
-            "kode_buku" => $request->kode_buku,
-            "judul_buku" => $request->judul_buku,
-            "pengarang" => $request->pengarang,
-            "tahun" => $request->tahun,
-            "kategori_id" => $request->kategori
+            'kode_buku' => $request->kode_buku,
+            'judul_buku' => $request->judul_buku,
+            'pengarang' => $request->pengarang,
+            'tahun' => $request->tahun,
+            'kategori_id' => $request->kategori,
         ]);
 
         return response()->json([
-            "statusCode" => 200,
-            "message" => "Sukses membuat data buku",
-            "data" => $data
+            'statusCode' => 200,
+            'message' => 'Sukses membuat data buku',
+            'data' => $data,
         ]);
     }
 
-    public function delete(int $id) {
+    public function delete(int $id)
+    {
 
         $data = Buku::query()->findOrFail($id);
 
         $data->delete();
 
         return response()->json([
-            "statusCode" => 200,
-            "message" => "Sukses menghapus data buku",
-            "data" => $data
+            'statusCode' => 200,
+            'message' => 'Sukses menghapus data buku',
+            'data' => $data,
         ]);
-
 
     }
 }

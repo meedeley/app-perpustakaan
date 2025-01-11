@@ -25,51 +25,51 @@ class AdminKategoriController extends Controller
     public function create(Request $request)
     {
         $validated = Validator::make($request->all(), [
-            "nama" => "required|string|min:3"
+            'nama' => 'required|string|min:3',
         ]);
 
         if ($validated->fails()) {
             return response()->json([
-                "statusCode" => 409,
-                "message" => "Gagal membuat data kategori",
-                "errors" => $validated->errors()
+                'statusCode' => 409,
+                'message' => 'Gagal membuat data kategori',
+                'errors' => $validated->errors(),
             ]);
         }
 
         $data = Kategori::query()->create([
-            "nama" => $request->nama
+            'nama' => $request->nama,
         ]);
 
         return response()->json([
-            "statusCode" => 200,
-            "message" => "sukses membuat data kategori",
-            "data" => $data
+            'statusCode' => 200,
+            'message' => 'sukses membuat data kategori',
+            'data' => $data,
         ]);
     }
 
     public function update(Request $request)
     {
         $validated = Validator::make($request->all(), [
-            "nama" => "required|string|min:3"
+            'nama' => 'required|string|min:3',
         ]);
 
         if ($validated->fails()) {
             return response()->json([
-                "statusCode" => 409,
-                "message" => "gagal update data kategori",
-                "errors" => $validated->errors()
+                'statusCode' => 409,
+                'message' => 'gagal update data kategori',
+                'errors' => $validated->errors(),
             ]);
         }
 
         $data = Kategori::query()->findOrFail($request->id);
 
         $data->update([
-            "nama" => $request->nama
+            'nama' => $request->nama,
         ]);
 
         return response()->json([
-            "statusCode" => 200,
-            "message" => "sukses update data kategori",
+            'statusCode' => 200,
+            'message' => 'sukses update data kategori',
         ]);
     }
 
@@ -80,8 +80,8 @@ class AdminKategoriController extends Controller
         $data->delete();
 
         return response()->json([
-            "statusCode" => 200,
-            "message" => "sukses menghapus data kategori"
+            'statusCode' => 200,
+            'message' => 'sukses menghapus data kategori',
         ]);
     }
 }

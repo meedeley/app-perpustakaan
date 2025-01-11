@@ -8,13 +8,15 @@ use Yajra\DataTables\Facades\DataTables;
 
 class AdminUserController extends Controller
 {
-   
-    public function index() {
+    public function index()
+    {
         if (request()->ajax()) {
             $users = User::query();
+
             return DataTables::of($users)->make();
-        
+
         }
+
         return view('admin.users.index');
     }
 }

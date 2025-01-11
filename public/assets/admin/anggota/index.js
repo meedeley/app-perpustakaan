@@ -1,6 +1,6 @@
-let table = $("#tabel-buku").DataTable({
+let table = $("#tabel-anggota").DataTable({
     ajax: {
-        url: baseUrl("/fetch/buku"),
+        url: baseUrl("/fetch/anggota"),
         headers: {
             "X-XSRF-TOKEN": getCookie("XSRF-TOKEN"),
         },
@@ -19,29 +19,25 @@ let table = $("#tabel-buku").DataTable({
     columns: [
         {
             name: "",
-            render: function (data, i, row, meta) {
+            render: (data, i, row, meta) => {
                 return meta.row + 1;
             },
         },
         {
-            data: "kode_buku",
+            data: "kode_anggota"
         },
         {
-            data: "judul_buku",
+            data: "nama_anggota",
         },
         {
-            data: "pengarang",
+            data: "jenis_kelamin",
         },
         {
-            data: "tahun",
-        },
-        {
-            data: "kategori",
+            data: "no_hp",
         },
         {
             data: "id",
             render: function (data, i, row) {
-                // => Create Container Button
                 let div = document.createElement("div");
                 div.className = "d-flex gap-2 row-action";
 
@@ -51,6 +47,12 @@ let table = $("#tabel-buku").DataTable({
                 edit.innerHTML = "Edit";
 
                 div.append(edit);
+
+                let detail = document.createElement("button");
+                detail.className = "btn btn-primary action-cetak";
+                detail.innerHTML = "Cetak";
+
+                div.append(detail);
 
                 // => Create Delete Button
                 let hapus = document.createElement("button");
@@ -63,39 +65,54 @@ let table = $("#tabel-buku").DataTable({
             },
         },
     ],
-    createdRow: (row, data) => {
+    createdRow: function (row, data) {
         $(".action-edit", row).on("click", function (e) {
             e.preventDefault();
 
-            $.httpRequest({
-                url: baseUrl("/select/kategori"),
-                method: "GET",
-                contentType: "application/json",
-                response: (res) => {
-                    if (res.statusCode == 200) {
-                        let select = $("#kategori");
+            let jenis_kelamin = $("#jenis_kelamin");
 
-                        res.data.forEach((data) => {
-                            select.append(
-                                `<option value="${data.id}">${data.nama}</option>`
-                            );
-                        });
-                    }
-                },
-            });
+            jenis_kelamin.empty();
+
+            jenis_kelamin.append(`
+                <option selected>-- Pilih Jenis Kelamin--</option>
+                <option value='laki-laki'>Laki Laki</option>
+                <option value='perempuan'>Perempuan</option>
+            `);
+
+            jenis_kelamin.val(data.jenis_kelamin);
 
             $("input[name='id']").val(data.id);
-            $("input[name='kode_buku']").val(data.kode_buku);
-            $("input[name='judul_buku']").val(data.judul_buku);
-            $("input[name='pengarang']").val(data.pengarang);
-            $("input[name='tahun']").val(data.tahun);
-
-            let kategori = $("input[name='kategori']");
-
-            kategori.empty();
-            kategori.val(data.kategori_id);
+            $("input[name='username']").val(data.username);
+            $("input[name='email']").val(data.email);
+            $("input[name='password']").val(data.password);
+            $("input[name='kode_anggota']").val(data.kode_anggota);
+            $("input[name='nama_anggota']").val(data.nama_anggota);
+            $("input[name='no_hp']").val(data.no_hp);
 
             $("#modal-form").modal("show");
+        });
+
+        $(".action-cetak", row).on("click", function (e) {
+
+            $.httpRequest({
+                url:baseUrl(`/print-modal/${data.id}`),
+                method: "POST",
+                contentType : "application/json",
+                response : (res) => {
+                    if(res.statusCode == 200) {
+
+                        // console.log(res.data.);
+                        let panjang =  $("#nama-anggota").text("AAAAAAAAAAAA");
+
+
+                       $("#nama-anggota").text(res.data.nama_anggota);
+                        $("#kode-anggota").text(res.data.kode_anggota);
+                        $("#email-anggota").text(res.data.email);
+                        $("#password").text(res.data.password);
+                    }
+                }
+            });
+            $("#modal-anggota").modal("show");
         });
 
         $(".action-hapus", row).on("click", function (e) {
@@ -113,7 +130,7 @@ let table = $("#tabel-buku").DataTable({
             }).then((result) => {
                 if (result.isConfirmed) {
                     $.httpRequest({
-                        url: baseUrl(`/buku/${data.id}`),
+                        url: baseUrl(`/anggota/${data.id}`),
                         method: "DELETE",
                         response: (res) => {
                             if (res.statusCode == 200) {
@@ -130,35 +147,23 @@ let table = $("#tabel-buku").DataTable({
     },
 });
 
-$("#set-buku").on("click", () => {
-    $("input[name='kode_buku']").val("");
-    $("input[name='judul_buku']").val("");
-    $("input[name='pengarang']").val("");
-    $("tahun[name='tahun']").val("");
+$("#set-modal").on("click", () => {
+    let jenis_kelamin = $("#jenis_kelamin");
 
-    // => GET DATA KATEGORI
-    $.httpRequest({
-        url: baseUrl("/select/kategori"),
-        method: "GET",
-        contentType: "application/json",
-        response: (res) => {
-            if (res.statusCode == 200) {
-                let select = $("#kategori");
+    jenis_kelamin.empty();
+    jenis_kelamin.append(`
+    <option selected>-- Pilih Jenis Kelamin--</option>
+    <option value='laki-laki'>Laki Laki</option>
+    <option value='perempuan'>Perempuan</option>
+    `);
 
-                select.empty();
-                select.append("<option selected>-- Pilih Kategori --</option>");
-
-                res.data.forEach((data) => {
-                    select.append(
-                        `<option value="${data.id}">${data.nama}</option>`
-                    );
-                });
-            }
-        },
-    });
-
-    // => Year Picker
-    $("input[name='tahun']").yearpicker();
+    $("input[name='id']").val("");
+    $("input[name='username']").val("");
+    $("input[name='email']").val("");
+    $("input[name='password']").val("");
+    $("input[name='kode_anggota']").val("");
+    $("input[name='nama_anggota']").val("");
+    $("input[name='no_hp']").val("");
 
     $("#modal-form").modal("show");
 });
@@ -169,8 +174,8 @@ $("#form-submit").on("submit", (e) => {
     let id = $("input[name='id']").val();
     let url =
         id == undefined || id == ""
-            ? baseUrl("/buku/create")
-            : baseUrl("/buku/update");
+            ? baseUrl("/anggota/create")
+            : baseUrl("/anggota/update");
     let method = id == undefined || id == "" ? "POST" : "PUT";
 
     $.httpRequest({
@@ -179,11 +184,14 @@ $("#form-submit").on("submit", (e) => {
         contentType: "application/json",
         data: JSON.stringify({
             id: id,
-            kode_buku: $("input[name='kode_buku']").val(),
-            judul_buku: $("input[name='judul_buku']").val(),
-            pengarang: $("input[name='pengarang']").val(),
-            tahun: $("input[name='tahun']").val(),
-            kategori: $("select[name='kategori']").val(),
+            username: $("input[name='username']").val(),
+            email: $("input[name='email']").val(),
+            password: $("input[name='password']").val(),
+
+            kode_anggota: $("input[name='kode_anggota']").val(),
+            nama_anggota: $("input[name='nama_anggota']").val(),
+            jenis_kelamin: $("select[name='jenis_kelamin']").val(),
+            no_hp: $("input[name='no_hp']").val(),
         }),
         response: (res) => {
             if (res.statusCode == 200) {
